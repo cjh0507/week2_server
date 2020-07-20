@@ -77,5 +77,5 @@ let router = require('./routes')(app, User, Image, upload);
 
 // [RUN SERVER]
 let server = app.listen(port, function() {
-  console.log("Express server has started on " + server.address().address + port);
+  console.log("Express server has started on " + server.address().address + ':' + port);
 });
