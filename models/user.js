@@ -1,4 +1,4 @@
-// User.js
+// models/user.js
 // User의 schema 정의
 
 const mongoose = require('mongoose');
