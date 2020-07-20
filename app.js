@@ -54,7 +54,7 @@ app.use(bodyParser.urlencoded( { extended: true } ));
 app.use(bodyParser.json());
 
 // [CONFIGURE SERVER PORT]
-let port = process.env.PORT || 8080; // process.env.PORT가 0이면 8080
+let port = process.env.PORT || 7980; // process.env.PORT가 0이면 7980
 
 // [CONFIGURE mongoose]
 
@@ -77,5 +77,5 @@ let router = require('./routes')(app, User, Image, upload);
 
 // [RUN SERVER]
 let server = app.listen(port, function() {
-  console.log("Express server has started on port " + port);
+  console.log("Express server has started on " + port);
 });
