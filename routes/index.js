@@ -189,6 +189,28 @@ module.exports = function(app, User, Image, upload)
 
     });
 
+    // UPDATE THE USER - add to like list
+    app.put('/api/users/likeList/:user_email', function(req, res) {
+
+        const userEmail = req.params.user_email;
+        const item = req.body.restaurant;
+
+        // user_email을 가진 user의 friendsList에 friend_email 제거
+        updateOneUser({email: userEmail}, {$addToSet: {'likeList': item}}, res);
+
+    });
+
+    // UPDATE THE USER - delete in like list
+    app.put('/api/users/likeList/:user_email', function(req, res) {
+
+        const userEmail = req.params.user_email;
+        const item = req.body.restaurant;
+
+        // user_email을 가진 user의 friendsList에 friend_email 제거
+        updateOneUser({email: userEmail}, {$pull: {'likeList': item}}, res);
+
+    });
+
     // DELETE SINGLE USER BY EMAIL
     app.delete('/api/users/:user_email', function(req, res){
 
@@ -203,6 +225,17 @@ module.exports = function(app, User, Image, upload)
             .catch((err) => {
                 return res.status(500).json({ error: "database failure" });
             });
+
+    });
+
+    // UPDATE THE USER - delete friend by email
+    app.delete('/api/users/friend/:user_email/:friend_email', function(req, res) {
+
+        const userEmail = req.params.user_email;
+        const friendEmail = req.params.friend_email;
+
+        // user_email을 가진 user의 friendsList에 friend_email 제거
+        updateOneUser({email: userEmail}, {$pull: {'friendsList': friendEmail}}, res);
 
     });
 
@@ -247,7 +280,7 @@ module.exports = function(app, User, Image, upload)
         });
     });
 
-    // 다운로드 요청 처리 (by id)
+    // 다운로드 요청 처리 (by saveFileName)
     app.get('/api/files/download/:saveFileName', function(req, res) {
 
         const saveFileName = req.params.saveFileName;
@@ -269,6 +302,31 @@ module.exports = function(app, User, Image, upload)
             console.log(e);
             res.status(500).send('파일을 다운로드하는 중에 에러가 발생하였습니다.');
         }
+
+    });
+
+    // 이미지 파일 삭제하기
+    app.delete('/api/files/:saveFileName', function(req, res) {
+        const saveFileName = req.params.saveFileName;
+
+
+        Image.deleteOne()
+            .where('saveFileName')
+            .equals(saveFileName)
+            .exec()
+            .then((result) => {
+                res.json({message: 'user removal request accepted'});
+                fs.unlink(__dirname + "/../images/" + saveFileName, function(err) {
+                    if (err) {
+                        res.status(500).json({ error: "file delete failure" });
+                        throw err;
+                    }
+                });
+                res.status(204).end(); // 204 NO CONTENTS
+            })
+            .catch((err) => {
+                return res.status(500).json({ error: "database failure" });
+            });
 
     });
 
