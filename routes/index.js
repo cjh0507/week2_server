@@ -201,7 +201,7 @@ module.exports = function(app, User, Image, upload)
     });
 
     // UPDATE THE USER - delete in like list
-    app.put('/api/users/likeList/:user_email', function(req, res) {
+    app.delete('/api/users/likeList/:user_email', function(req, res) {
 
         const userEmail = req.params.user_email;
         const item = req.body.restaurant;
