@@ -326,8 +326,7 @@ module.exports = function(app, User, Image, upload)
     // DB 상의 파일 데이터 업데이트
     app.put('/api/files/:saveFileName', function(req, res) {
 
-        const saveFileName = req.params.saveFileName;
-        Image.updateOne({ saveFileName: saveFileName }, { $set: req.body.description })
+        Image.updateOne({ saveFileName: req.params.saveFileName }, { $set: req.body.description })
             .exec()
             .then((result) => {
                 if(!result) return res.status(404).json( { error : 'user not found'} );
