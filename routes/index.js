@@ -312,6 +312,7 @@ module.exports = function(app, User, Image, upload)
         Image.findOne()
             .where('saveFileName')
             .equals(saveFileName)
+            .select('title description')
             .exec()
             .then((result) => {
                 res.json(result);
