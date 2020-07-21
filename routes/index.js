@@ -305,6 +305,24 @@ module.exports = function(app, User, Image, upload)
 
     });
 
+    // DB 상에 저장된, 파일의 메타데이터를 얻기 (메타 데이터가 DB에 있는 거임 파일은 서버의 로컬에 있음)
+    app.get('/api/files/meta/:saveFileName', function(req, res) {
+
+        const saveFileName = req.params.saveFileName;
+        Image.findOne()
+            .where('saveFileName')
+            .equals(saveFileName)
+            .exec()
+            .then((result) => {
+                res.json(result);
+            })
+            .catch((err) => {
+                return res.status(500).json({error: err});
+            });
+
+    });
+
+
     // 이미지 파일 삭제하기
     app.delete('/api/files/:saveFileName', function(req, res) {
         const saveFileName = req.params.saveFileName;
