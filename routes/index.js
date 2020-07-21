@@ -326,14 +326,15 @@ module.exports = function(app, User, Image, upload)
     // DB 상의 파일 데이터 업데이트
     app.put('/api/files/:saveFileName', function(req, res) {
 
-        Image.updateOne({ saveFileName: req.params.saveFileName }, { $set: req.body.description })
+        const target = req.params.saveFileName
+        Image.updateOne({ saveFileName: target }, { $set: { description : req.body.description } })
             .exec()
             .then((result) => {
                 if(!result) return res.status(404).json( { error : 'user not found'} );
                 res.json({message: 'user updated'});
             })
             .catch((err) => {
-                return res.status(500).json({error: err});
+                return res.status(500).json({ error: "database failure" });
             });
 
     });
@@ -341,7 +342,6 @@ module.exports = function(app, User, Image, upload)
     // 이미지 파일 삭제하기
     app.delete('/api/files/:saveFileName', function(req, res) {
         const saveFileName = req.params.saveFileName;
-
 
         Image.deleteOne()
             .where('saveFileName')
